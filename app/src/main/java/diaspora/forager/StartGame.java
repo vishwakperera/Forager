@@ -1,5 +1,7 @@
 package diaspora.forager;
 
+import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,7 +12,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import android.content.Context;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -42,7 +44,7 @@ public class StartGame extends AppCompatActivity {
 
     private static final Logger logger = Logger.getLogger(StartGame.class.getName());
 
-    private TextView question;
+    //private TextView question;
     private TextView counter;
     private Button skipButton;
     private Button submitButton;
@@ -73,16 +75,22 @@ public class StartGame extends AppCompatActivity {
     private RadioButton vIdentity;
     private RadioButton sIdentity;
     private RadioButton nIdentity;
+    private Button mushroom_tap;
 
     private CheckBox readable;
     private EditText comments;
-
-
+    final Context context = this;
+    private String questionText;
     private void setComponents() {
-        question = (TextView) findViewById(R.id.question);
+       // question = (TextView) findViewById(R.id.question);
         counter = (TextView) findViewById(R.id.counter);
         skipButton = (Button) findViewById(R.id.skipButton);
         submitButton = (Button) findViewById(R.id.Submit);
+        mushroom_tap = (Button) findViewById(R.id.mushroom_tap);
+        mushroom_tap.setVisibility(View.VISIBLE);
+        mushroom_tap.setBackgroundColor(Color.TRANSPARENT);
+
+
 
         // Instantiate the RequestQueue.
         queue = Volley.newRequestQueue(this);
@@ -126,10 +134,11 @@ public class StartGame extends AppCompatActivity {
                         try {
                             JSONArray responseObject = new JSONArray(response);
                             JSONObject questionObject = new JSONObject(responseObject.getString(questionNo));
-                            question.setText(questionObject.toString());
+                           // question.setText(questionObject.toString());
                             JSONObject revisionObject = new JSONObject(questionObject.getString("question"));
                             String questiontoRate = revisionObject.getString("revision_text");
-                            question.setText(questiontoRate);
+                            questionText = questiontoRate;
+                            //question.setText(questiontoRate);
                             questionId = questionObject.getString("question_id");
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -138,7 +147,7 @@ public class StartGame extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                question.setText("That didn't work!");
+                questionText="That didn't work!";
             }
         });
 
@@ -283,8 +292,8 @@ public class StartGame extends AppCompatActivity {
 
         queue.add(req);
     }
-    
-    private void nextQuestion(){
+
+    private void nextQuestion() {
         readable.setChecked(true);
 
         vToxic.setChecked(false);
@@ -305,7 +314,7 @@ public class StartGame extends AppCompatActivity {
 
         comments.setText("");
         //comments = (EditText) findViewById(R.id.comments);
-        question.setText("Loading question...");
+        questionText="Loading question...";
         int questionNo = Integer.parseInt(counter.getText().toString());
         questionNo++;
         if ((questionNo) > 10) {
@@ -332,6 +341,19 @@ public class StartGame extends AppCompatActivity {
                 addPointToDatabase(databaseReference, firebaseAuth.getCurrentUser());
             }
         });
+        mushroom_tap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                builder1.setMessage(questionText).setCancelable(true);
+                builder1.setTitle("Question");
+                AlertDialog questionAlert = builder1.create();
+                questionAlert.show();
+
+            }
+        });
+
+
     }
 
     private void subtractFromDistanceRemaining(final DatabaseReference databaseReference, FirebaseUser firebaseUser) {
