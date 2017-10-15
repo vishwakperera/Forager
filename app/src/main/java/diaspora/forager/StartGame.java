@@ -49,7 +49,6 @@ public class StartGame extends AppCompatActivity {
 
     //private TextView question;
     private TextView counter;
-    private Button skipButton;
     private Button submitButton;
 
     private RequestQueue queue;
@@ -90,7 +89,6 @@ public class StartGame extends AppCompatActivity {
     private void setComponents() {
         // question = (TextView) findViewById(R.id.question);
         counter = (TextView) findViewById(R.id.counter);
-        skipButton = (Button) findViewById(R.id.skipButton);
         submitButton = (Button) findViewById(R.id.Submit);
         mushroom_tap = (Button) findViewById(R.id.mushroom_tap);
         mushroom_tap.setVisibility(View.VISIBLE);
@@ -329,6 +327,7 @@ public class StartGame extends AppCompatActivity {
         }
         loadQuestion();
     }
+
     //Swipe Checker to skip current question and call nextQuestion()
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
@@ -349,12 +348,6 @@ public class StartGame extends AppCompatActivity {
     }
 
     private void setOnClick() {
-        skipButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                nextQuestion();
-            }
-        });
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
