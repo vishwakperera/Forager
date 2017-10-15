@@ -5,14 +5,17 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -76,20 +79,22 @@ public class StartGame extends AppCompatActivity {
     private RadioButton sIdentity;
     private RadioButton nIdentity;
     private Button mushroom_tap;
+    private float x1, x2;
+    private static final int MIN_DISTANCE = 150;
 
     private CheckBox readable;
     private EditText comments;
     final Context context = this;
     private String questionText;
+
     private void setComponents() {
-       // question = (TextView) findViewById(R.id.question);
+        // question = (TextView) findViewById(R.id.question);
         counter = (TextView) findViewById(R.id.counter);
         skipButton = (Button) findViewById(R.id.skipButton);
         submitButton = (Button) findViewById(R.id.Submit);
         mushroom_tap = (Button) findViewById(R.id.mushroom_tap);
         mushroom_tap.setVisibility(View.VISIBLE);
         mushroom_tap.setBackgroundColor(Color.TRANSPARENT);
-
 
 
         // Instantiate the RequestQueue.
@@ -134,7 +139,7 @@ public class StartGame extends AppCompatActivity {
                         try {
                             JSONArray responseObject = new JSONArray(response);
                             JSONObject questionObject = new JSONObject(responseObject.getString(questionNo));
-                           // question.setText(questionObject.toString());
+                            // question.setText(questionObject.toString());
                             JSONObject revisionObject = new JSONObject(questionObject.getString("question"));
                             String questiontoRate = revisionObject.getString("revision_text");
                             questionText = questiontoRate;
@@ -147,7 +152,7 @@ public class StartGame extends AppCompatActivity {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                questionText="That didn't work!";
+                questionText = "That didn't work!";
             }
         });
 
@@ -314,7 +319,7 @@ public class StartGame extends AppCompatActivity {
 
         comments.setText("");
         //comments = (EditText) findViewById(R.id.comments);
-        questionText="Loading question...";
+        questionText = "Loading question...";
         int questionNo = Integer.parseInt(counter.getText().toString());
         questionNo++;
         if ((questionNo) > 10) {
@@ -323,6 +328,24 @@ public class StartGame extends AppCompatActivity {
             counter.setText(Integer.toString(questionNo));
         }
         loadQuestion();
+    }
+    //Swipe Checker to skip current question and call nextQuestion()
+    public boolean onTouchEvent(MotionEvent event) {
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                x1 = event.getX();
+                break;
+            case MotionEvent.ACTION_UP:
+                x2 = event.getX();
+                float deltaX = x2 - x1;
+                if (Math.abs(deltaX) > MIN_DISTANCE) {
+                    if (x1 > x2) {
+                        nextQuestion();
+                    }
+                }
+                break;
+        }
+        return super.onTouchEvent(event);
     }
 
     private void setOnClick() {
