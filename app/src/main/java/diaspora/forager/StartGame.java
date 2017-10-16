@@ -360,7 +360,7 @@ public class StartGame extends AppCompatActivity {
         mushroom_tap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AlertDialog.Builder builder1 = new AlertDialog.Builder(context, R.style.MyDialogTheme);
+                AlertDialog.Builder builder1 = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
                 builder1.setMessage(questionText).setCancelable(true);
                 builder1.setTitle("Question");
                 AlertDialog questionAlert = builder1.create();

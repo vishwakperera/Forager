@@ -16,5 +16,9 @@
          <item name="android:colorForeground">#00e5a5</item>
          <item name="android:fontFamily">sans-serif </item>
      </style>
-
+     <style name="AlertDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+         <item name="android:background">#1b2321</item>
+         <item name="android:colorForeground">#00e5a5</item>
+         <item name="android:fontFamily">sans-serif</item>
+    </style>
 </resources>
