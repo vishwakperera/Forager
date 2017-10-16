@@ -1,10 +1,13 @@
 package diaspora.forager;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -361,13 +364,14 @@ public class StartGame extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AlertDialog.Builder builder1 = new AlertDialog.Builder(context, R.style.AlertDialogTheme);
-                builder1.setMessage(questionText).setCancelable(true);
-                builder1.setTitle("Question");
-                AlertDialog questionAlert = builder1.create();
+                builder1.setMessage(Html.fromHtml("<font color = '#00e5a5'>"+questionText+"</font>")).setCancelable(true);
+                builder1.setTitle(Html.fromHtml("<font color = '#00e5a5'>Question</font>"));
+                final AlertDialog questionAlert = builder1.create();
                 questionAlert.show();
 
             }
         });
+
 
 
     }
